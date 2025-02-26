@@ -13,8 +13,15 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :registerable, :validatable
 
   validates :email, presence: true, uniqueness: true
+
+  def pizza_store_owner?
+    has_roles?(User::PIZZA_STORE_OWNER)
+  end
+
+  def pizza_chef?
+    has_roles?(User::PIZZA_CHEF)
+  end
 end
