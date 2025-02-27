@@ -4,9 +4,13 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     if resource.pizza_store_owner?
-      home_index_path
+      toppings_path
     elsif resource.pizza_chef?
       home_index_path
     end
+  end
+
+  def after_sign_out_path_for(resource)
+    root_path
   end
 end
