@@ -57,6 +57,7 @@ group :development, :test do
   gem "minitest", "~> 5.20"
   gem "minitest-rails"
   gem "pry"
+  gem "database_cleaner-active_record"
 end
 
 group :development do

@@ -1,46 +1,152 @@
 require "test_helper"
 
-describe ToppingsController do
-  let(:topping) { toppings(:one) }
+class ToppingsControllerTest < ActionDispatch::IntegrationTest
+  let(:topping) { FactoryBot.create(:topping, name: "cheese") }
+  let(:pizza_store_owner) { FactoryBot.create(:user, roles: [User::PIZZA_STORE_OWNER])}
+  let(:pizza_chef) { FactoryBot.create(:user, roles: [User::PIZZA_CHEF])}
 
-  it "should get index" do
-    get toppings_url
-    must_respond_with :success
-  end
-
-  it "should get new" do
-    get new_topping_url
-    must_respond_with :success
-  end
-
-  it "should create topping" do
-    assert_difference("Topping.count") do
-      post toppings_url, params: { topping: { name: @topping.name } }
+  describe "#index" do
+    it "returns success response" do
+      sign_in pizza_store_owner
+      get toppings_url
+      assert_response :success
     end
 
-    must_redirect_to topping_url(Topping.last)
+    context "when the current user is a pizza_chef" do
+      it "get redirected" do
+        sign_in pizza_chef
+        get toppings_url
+        assert_redirected_to root_path
+      end
+    end
   end
-
-  it "should show topping" do
-    get topping_url(@topping)
-    must_respond_with :success
-  end
-
-  it "should get edit" do
-    get edit_topping_url(@topping)
-    must_respond_with :success
-  end
-
-  it "should update topping" do
-    patch topping_url(@topping), params: { topping: { name: @topping.name } }
-    must_redirect_to topping_url(@topping)
-  end
-
-  it "should destroy topping" do
-    assert_difference("Topping.count", -1) do
-      delete topping_url(@topping)
+  
+  describe "#new" do
+    it "returns success response" do
+      sign_in pizza_store_owner
+      get new_topping_url
+      assert_response :success
     end
 
-    must_redirect_to toppings_url
+    context "when the current user is a pizza_chef" do
+      it "get redirected" do
+        sign_in pizza_chef
+        get new_topping_url
+        assert_redirected_to root_path
+      end
+    end
   end
+
+  describe "#create" do
+    before { Topping.destroy_all }
+    it "should create topping" do
+      sign_in pizza_store_owner
+      assert_difference("Topping.count") do
+        post toppings_url, params: { topping: { name: "cheese" } }
+      end
+      assert_redirected_to topping_url(Topping.last)
+    end
+
+    context "when there is a existing topping" do
+      it "does not create the topping" do
+        sign_in pizza_store_owner
+        topping
+        assert_no_difference("Topping.count") do
+          post toppings_url, params: { topping: { name: "cheese" } }
+        end
+      end
+    end
+
+    context "when the current user is a pizza chef" do
+      it "does not create the pizza" do
+        sign_in pizza_chef
+        assert_no_difference("Topping.count") do
+          post toppings_url, params: { topping: { name: "cheese" } }
+        end
+        assert_redirected_to root_path
+      end
+    end
+  end
+  
+  describe "#show" do
+    before { Topping.destroy_all }
+    it "should show topping" do
+      sign_in pizza_store_owner
+      get topping_url(topping)
+      assert_response :success
+    end
+
+    context "when the current user is a pizza chef" do
+      it "does not show the pizza" do
+        sign_in pizza_chef
+        get topping_url(topping)
+        assert_redirected_to root_path
+      end
+    end
+  end
+
+  describe "#edit" do
+    before { Topping.destroy_all }
+    it "should get edit" do
+      sign_in pizza_store_owner
+      get edit_topping_url(topping)
+      assert_response :success
+    end
+
+    context "when the current user is a pizza chef" do
+      it "should not edit" do
+        sign_in pizza_chef
+        get edit_topping_url(topping)
+        assert_redirected_to root_path
+      end
+    end
+  end
+
+  describe "#update" do
+    before { Topping.destroy_all }
+    it "should update topping" do
+      sign_in pizza_store_owner
+      patch topping_url(topping), params: { topping: { name: "pineapple" } }
+      assert_redirected_to topping_url(topping)
+      topping.reload
+      assert_equal("pineapple", topping.name)
+    end
+
+    context "when the current user is a pizza chef" do
+      it "does not update topping" do
+        sign_in pizza_chef
+        patch topping_url(topping), params: { topping: { name: "pineapple" } }
+        assert_redirected_to root_path
+        topping.reload
+        assert_equal("cheese", topping.name)
+      end
+    end
+  end
+
+  describe "#destroy" do
+    before { Topping.destroy_all }
+    it "should destroy topping" do
+      sign_in pizza_store_owner
+      topping
+      assert_difference("Topping.count", -1) do
+        delete topping_url(topping)
+      end
+      assert_redirected_to toppings_url
+    end
+
+    context "when the current user is a pizza chef" do
+      it "does not destroy topping" do
+        sign_in pizza_chef
+        topping
+        assert_no_difference("Topping.count") do
+          delete topping_url(topping)
+        end
+        assert_redirected_to root_path
+      end
+    end
+  end
+
+  
+
+  
 end
