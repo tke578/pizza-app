@@ -1,6 +1,8 @@
 require "test_helper"
 
-class ToppingsControllerTest < ActionDispatch::IntegrationTest
+require "test_helper"
+
+class PizzasControllerTest < ActionDispatch::IntegrationTest
   let(:topping) { FactoryBot.create(:topping, name: "cheese") }
   let(:pizza_store_owner) { FactoryBot.create(:user, roles: [User::PIZZA_STORE_OWNER])}
   let(:pizza_chef) { FactoryBot.create(:user, roles: [User::PIZZA_CHEF])}
@@ -146,3 +148,49 @@ class ToppingsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 end
+
+
+# describe PizzasController do
+#   let(:pizza) { pizzas(:one) }
+
+#   it "should get index" do
+#     get pizzas_url
+#     must_respond_with :success
+#   end
+
+#   it "should get new" do
+#     get new_pizza_url
+#     must_respond_with :success
+#   end
+
+#   it "should create pizza" do
+#     assert_difference("Pizza.count") do
+#       post pizzas_url, params: { pizza: { name: @pizza.name } }
+#     end
+
+#     must_redirect_to pizza_url(Pizza.last)
+#   end
+
+#   it "should show pizza" do
+#     get pizza_url(@pizza)
+#     must_respond_with :success
+#   end
+
+#   it "should get edit" do
+#     get edit_pizza_url(@pizza)
+#     must_respond_with :success
+#   end
+
+#   it "should update pizza" do
+#     patch pizza_url(@pizza), params: { pizza: { name: @pizza.name } }
+#     must_redirect_to pizza_url(@pizza)
+#   end
+
+#   it "should destroy pizza" do
+#     assert_difference("Pizza.count", -1) do
+#       delete pizza_url(@pizza)
+#     end
+
+#     must_redirect_to pizzas_url
+#   end
+# end
