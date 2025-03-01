@@ -3,194 +3,148 @@ require "test_helper"
 require "test_helper"
 
 class PizzasControllerTest < ActionDispatch::IntegrationTest
-  let(:topping) { FactoryBot.create(:topping, name: "cheese") }
+  let(:pizza) { FactoryBot.create(:pizza, name: "supreme") }
   let(:pizza_store_owner) { FactoryBot.create(:user, roles: [User::PIZZA_STORE_OWNER])}
   let(:pizza_chef) { FactoryBot.create(:user, roles: [User::PIZZA_CHEF])}
 
   describe "#index" do
     it "returns success response" do
-      sign_in pizza_store_owner
-      get toppings_url
+      sign_in pizza_chef
+      get pizzas_url
       assert_response :success
     end
 
-    context "when the current user is a pizza_chef" do
+    context "when the current user is a pizza_store_owner" do
       it "get redirected" do
-        sign_in pizza_chef
-        get toppings_url
-        assert_redirected_to root_path
+        sign_in pizza_store_owner
+        get pizzas_url
+        assert_redirected_to toppings_url
       end
     end
   end
   
   describe "#new" do
     it "returns success response" do
-      sign_in pizza_store_owner
-      get new_topping_url
+      sign_in pizza_chef
+      get new_pizza_url
       assert_response :success
     end
 
-    context "when the current user is a pizza_chef" do
+    context "when the current user is a pizza_store_owner" do
       it "get redirected" do
-        sign_in pizza_chef
-        get new_topping_url
-        assert_redirected_to root_path
+        sign_in pizza_store_owner
+        get new_pizza_url
+        assert_redirected_to toppings_url
       end
     end
   end
 
   describe "#create" do
-    before { Topping.destroy_all }
-    it "should create topping" do
-      sign_in pizza_store_owner
-      assert_difference("Topping.count") do
-        post toppings_url, params: { topping: { name: "cheese" } }
+    before { Pizza.destroy_all }
+    it "should create pizza" do
+      sign_in pizza_chef
+      assert_difference("Pizza.count") do
+        post pizzas_url, params: { pizza: { name: "pizza" } }
       end
-      assert_redirected_to topping_url(Topping.last)
+      assert_redirected_to pizza_url(Pizza.last)
     end
 
-    context "when there is a existing topping" do
-      it "does not create the topping" do
-        sign_in pizza_store_owner
-        topping
-        assert_no_difference("Topping.count") do
-          post toppings_url, params: { topping: { name: "cheese" } }
-        end
-      end
-    end
-
-    context "when the current user is a pizza chef" do
+    context "when there is a existing pizza" do
       it "does not create the pizza" do
         sign_in pizza_chef
-        assert_no_difference("Topping.count") do
-          post toppings_url, params: { topping: { name: "cheese" } }
+        pizza
+        assert_no_difference("Pizza.count") do
+          post toppings_url, params: { pizza: { name: "pizza" } }
         end
-        assert_redirected_to root_path
+      end
+    end
+
+    context "when the current user is a pizza_store_owner" do
+      it "does not create the pizza" do
+        sign_in pizza_store_owner
+        assert_no_difference("Pizza.count") do
+          post pizzas_url, params: { pizza: { name: "supreme" } }
+        end
+        assert_redirected_to toppings_url
       end
     end
   end
   
   describe "#show" do
-    before { Topping.destroy_all }
-    it "should show topping" do
-      sign_in pizza_store_owner
-      get topping_url(topping)
+    before { Pizza.destroy_all }
+    it "should show pizza" do
+      sign_in pizza_chef
+      get pizza_url(pizza)
       assert_response :success
     end
 
-    context "when the current user is a pizza chef" do
+    context "when the current user is a pizza_store_owner`" do
       it "does not show the pizza" do
-        sign_in pizza_chef
-        get topping_url(topping)
-        assert_redirected_to root_path
+        sign_in pizza_store_owner
+        get pizza_url(pizza)
+        assert_redirected_to toppings_url
       end
     end
   end
 
   describe "#edit" do
-    before { Topping.destroy_all }
+    before { Pizza.destroy_all }
     it "should get edit" do
-      sign_in pizza_store_owner
-      get edit_topping_url(topping)
+      sign_in pizza_chef
+      get edit_pizza_url(pizza)
       assert_response :success
     end
 
     context "when the current user is a pizza chef" do
       it "should not edit" do
-        sign_in pizza_chef
-        get edit_topping_url(topping)
-        assert_redirected_to root_path
+        sign_in pizza_store_owner
+        get edit_pizza_url(pizza)
+        assert_redirected_to toppings_url
       end
     end
   end
 
   describe "#update" do
-    before { Topping.destroy_all }
-    it "should update topping" do
-      sign_in pizza_store_owner
-      patch topping_url(topping), params: { topping: { name: "pineapple" } }
-      assert_redirected_to topping_url(topping)
-      topping.reload
-      assert_equal("pineapple", topping.name)
+    before { Pizza.destroy_all }
+    it "should update pizza" do
+      sign_in pizza_chef
+      patch pizza_url(pizza), params: { pizza: { name: "supreme" } }
+      assert_redirected_to pizza_url(pizza)
+      pizza.reload
+      assert_equal("supreme", pizza.name)
     end
 
-    context "when the current user is a pizza chef" do
-      it "does not update topping" do
-        sign_in pizza_chef
-        patch topping_url(topping), params: { topping: { name: "pineapple" } }
-        assert_redirected_to root_path
-        topping.reload
-        assert_equal("cheese", topping.name)
+    context "when the current user is a pizza_store_owner" do
+      it "does not update pizza" do
+        sign_in pizza_store_owner
+        patch pizza_url(pizza), params: { pizza: { name: "supreme" } }
+        assert_redirected_to toppings_url
+        pizza.reload
+        assert_equal("supreme", pizza.name)
       end
     end
   end
 
   describe "#destroy" do
-    before { Topping.destroy_all }
-    it "should destroy topping" do
-      sign_in pizza_store_owner
-      topping
-      assert_difference("Topping.count", -1) do
-        delete topping_url(topping)
+    before { Pizza.destroy_all }
+    it "should destroy pizza" do
+      sign_in pizza_chef
+      pizza
+      assert_difference("Pizza.count", -1) do
+        delete pizza_url(pizza)
       end
-      assert_redirected_to toppings_url
+      assert_redirected_to pizzas_url
     end
 
-    context "when the current user is a pizza chef" do
-      it "does not destroy topping" do
-        sign_in pizza_chef
-        topping
-        assert_no_difference("Topping.count") do
-          delete topping_url(topping)
+    context "when the current user is a pizza_store_owner" do
+      it "does not destroy pizza" do
+        sign_in pizza_store_owner
+        pizza
+        assert_no_difference("Pizza.count") do
+          delete pizza_url(pizza)
         end
-        assert_redirected_to root_path
+        assert_redirected_to toppings_url
       end
     end
   end
 end
-
-
-# describe PizzasController do
-#   let(:pizza) { pizzas(:one) }
-
-#   it "should get index" do
-#     get pizzas_url
-#     must_respond_with :success
-#   end
-
-#   it "should get new" do
-#     get new_pizza_url
-#     must_respond_with :success
-#   end
-
-#   it "should create pizza" do
-#     assert_difference("Pizza.count") do
-#       post pizzas_url, params: { pizza: { name: @pizza.name } }
-#     end
-
-#     must_redirect_to pizza_url(Pizza.last)
-#   end
-
-#   it "should show pizza" do
-#     get pizza_url(@pizza)
-#     must_respond_with :success
-#   end
-
-#   it "should get edit" do
-#     get edit_pizza_url(@pizza)
-#     must_respond_with :success
-#   end
-
-#   it "should update pizza" do
-#     patch pizza_url(@pizza), params: { pizza: { name: @pizza.name } }
-#     must_redirect_to pizza_url(@pizza)
-#   end
-
-#   it "should destroy pizza" do
-#     assert_difference("Pizza.count", -1) do
-#       delete pizza_url(@pizza)
-#     end
-
-#     must_redirect_to pizzas_url
-#   end
-# end
