@@ -27,6 +27,20 @@ module ActiveSupport
       )
     end
 
+    def assert_has_many(model, association)
+      assert_association(model, association, :has_many)
+    end
+
+    def assert_belongs_to(model, association)
+      assert_association(model, association, :belongs_to)
+    end
+
+    def assert_association(model, association, association_type)
+      assert_includes(model.reflections, association.to_s)
+      assert_equal(association_type, model.reflections[association.to_s].macro)
+    end
+
+
     class << self
       alias context describe
     end

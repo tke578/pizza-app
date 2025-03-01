@@ -1,6 +1,6 @@
 require "test_helper"
 
-describe Topping < ActiveSupport::TestCase do
+class ToppingTest < ActiveSupport::TestCase
   describe "#validations" do
     before { Topping.destroy_all }
     it "has a valid topping name" do
@@ -17,6 +17,12 @@ describe Topping < ActiveSupport::TestCase do
         refute(topping.valid?)
         assert_equal("Name has already been taken", topping.errors.full_messages.first)
       end
+    end
+  end
+
+  describe "#associations" do
+    it "has_many pizzas" do
+      assert_has_many Topping, :pizzas
     end
   end
 end

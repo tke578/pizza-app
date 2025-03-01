@@ -1,6 +1,6 @@
 require "test_helper"
 
-describe Pizza < ActiveSupport::TestCase do
+class PizzaTest < ActiveSupport::TestCase
   describe "#validations" do
     before { Pizza.destroy_all }
     it "has a valid pizza name" do
@@ -17,6 +17,12 @@ describe Pizza < ActiveSupport::TestCase do
         refute(pizza.valid?)
         assert_equal("Name has already been taken", pizza.errors.full_messages.first)
       end
+    end
+  end
+
+  describe "#associations" do
+    it "has_many toppings" do
+      assert_has_many Pizza, :toppings
     end
   end
 end

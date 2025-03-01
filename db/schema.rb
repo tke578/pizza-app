@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_28_192410) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_01_050128) do
+  create_table "pizza_toppings", force: :cascade do |t|
+    t.integer "pizza_id", null: false
+    t.integer "topping_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pizza_id", "topping_id"], name: "index_pizza_toppings_on_pizza_id_and_topping_id", unique: true
+    t.index ["pizza_id"], name: "index_pizza_toppings_on_pizza_id"
+    t.index ["topping_id"], name: "index_pizza_toppings_on_topping_id"
+  end
+
   create_table "pizzas", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -35,4 +45,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_192410) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "pizza_toppings", "pizzas"
+  add_foreign_key "pizza_toppings", "toppings"
 end

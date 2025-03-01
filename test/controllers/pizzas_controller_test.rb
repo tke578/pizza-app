@@ -50,11 +50,14 @@ class PizzasControllerTest < ActionDispatch::IntegrationTest
     end
 
     context "when there is a existing pizza" do
+      before { FactoryBot.create(:topping, name: "cheese")}
       it "does not create the pizza" do
         sign_in pizza_chef
         pizza
         assert_no_difference("Pizza.count") do
-          post toppings_url, params: { pizza: { name: "pizza" } }
+          assert_no_difference("PizzaTopping.count") do
+            post toppings_url, params: { pizza: { name: "pizza", topping_ids: [Topping.last.id] } }
+          end
         end
       end
     end
@@ -66,6 +69,33 @@ class PizzasControllerTest < ActionDispatch::IntegrationTest
           post pizzas_url, params: { pizza: { name: "supreme" } }
         end
         assert_redirected_to toppings_url
+      end
+    end
+
+    context "when toppings exists" do
+      before { FactoryBot.create(:topping, name: "cheese")}
+      it "creates the pizza topping" do
+        sign_in pizza_chef
+        assert_difference ["Pizza.count", "PizzaTopping.count"], 1 do
+          post pizzas_url, params: { pizza: { name: "supreme", topping_ids: [Topping.last.id] } }
+        end
+        toppings = Pizza.last.toppings
+        assert_equal(1, Pizza.last.toppings.size)
+        assert_equal("cheese", toppings.first.name)
+      end
+
+      context "if a user tries to malicously add a duplicate topping" do
+        it "only creates one pizza topping" do
+          sign_in pizza_chef
+          assert_difference("Pizza.count") do
+            assert_difference ["PizzaTopping.count"], 1 do
+              post pizzas_url, params: { pizza: { name: "supreme", topping_ids: [Topping.last.id, Topping.last.id] } }
+            end
+          end
+          toppings = Pizza.last.toppings
+          assert_equal(1, Pizza.last.toppings.size)
+          assert_equal("cheese", toppings.first.name)
+        end
       end
     end
   end
@@ -121,6 +151,33 @@ class PizzasControllerTest < ActionDispatch::IntegrationTest
         assert_redirected_to toppings_url
         pizza.reload
         assert_equal("supreme", pizza.name)
+      end
+    end
+
+    context "when a pizza topping exists" do
+      before do
+        pizza.toppings << FactoryBot.create(:topping, name: "cheese")
+        pizza.save
+        FactoryBot.create(:topping, name: "pineapple" )
+      end
+      context "change the topping" do
+        it "should change the pizza topping" do
+          sign_in pizza_chef
+          patch pizza_url(pizza), params: { pizza: { name: "supreme", topping_ids: [Topping.last.id] } }
+          pizza_toppings = pizza.toppings
+          assert_equal(1, pizza_toppings.size)
+          # binding.pry
+          assert(pizza_toppings.include? Topping.last)
+        end
+      end
+      context "if a user tries to malicously add a duplicate topping" do
+        it "only creates one pizza topping" do
+          sign_in pizza_chef
+          patch pizzas_url, params: { pizza: { name: "supreme", topping_ids: [Topping.last.id, Topping.last.id] } }
+          toppings = Pizza.last.toppings
+          assert_equal(1, Pizza.last.toppings.size)
+          assert_equal("cheese", toppings.first.name)
+        end
       end
     end
   end

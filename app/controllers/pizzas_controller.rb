@@ -23,7 +23,6 @@ class PizzasController < ApplicationController
   # POST /pizzas
   def create
     @pizza = Pizza.new(pizza_params)
-
     if @pizza.save
       redirect_to @pizza, notice: 'Pizza was successfully created.'
     else
@@ -34,6 +33,7 @@ class PizzasController < ApplicationController
   # PATCH/PUT /pizzas/1
   def update
     if @pizza.update(pizza_params)
+
       redirect_to @pizza, notice: 'Pizza was successfully updated.'
     else
       render :edit
@@ -54,6 +54,6 @@ class PizzasController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def pizza_params
-      params.require(:pizza).permit(:name)
+      params.require(:pizza).permit(:name, topping_ids: [])
     end
 end

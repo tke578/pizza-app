@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     if resource.pizza_store_owner?
       toppings_path
     elsif resource.pizza_chef?
-      root_path
+      pizzas_path
     end
   end
 
