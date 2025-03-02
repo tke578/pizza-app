@@ -14,7 +14,6 @@ class ToppingsControllerTest < ActionDispatch::IntegrationTest
 
     context "when the current user is a pizza_chef" do
       it "get redirected" do
-        # binding.pry
         sign_in pizza_chef
         get toppings_url
         assert_redirected_to pizzas_url

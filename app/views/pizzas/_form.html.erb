@@ -1,9 +1,9 @@
-<%= form_with(model: @pizza, data: { turbo: false}) do |form| %>
-  <% if @pizza.errors.any? %>
+<%= form_with(model: pizza, data: { turbo: false}) do |form| %>
+  <% if pizza.errors.any? %>
     <div class="alert alert-danger">
-      <h4><%= pluralize(@pizza.errors.count, "error") %> prohibited this pizza from being saved:</h4>
+      <h4><%= pluralize(pizza.errors.count, "error") %> prohibited this pizza from being saved:</h4>
       <ul>
-        <% @pizza.errors.full_messages.each do |message| %>
+        <% pizza.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
