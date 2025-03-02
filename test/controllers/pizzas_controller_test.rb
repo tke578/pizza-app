@@ -1,7 +1,5 @@
 require "test_helper"
 
-require "test_helper"
-
 class PizzasControllerTest < ActionDispatch::IntegrationTest
   let(:pizza) { FactoryBot.create(:pizza, name: "supreme") }
   let(:pizza_store_owner) { FactoryBot.create(:user, roles: [User::PIZZA_STORE_OWNER])}
