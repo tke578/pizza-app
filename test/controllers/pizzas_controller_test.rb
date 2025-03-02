@@ -166,7 +166,6 @@ class PizzasControllerTest < ActionDispatch::IntegrationTest
           patch pizza_url(pizza), params: { pizza: { name: "supreme", topping_ids: [Topping.last.id] } }
           pizza_toppings = pizza.toppings
           assert_equal(1, pizza_toppings.size)
-          # binding.pry
           assert(pizza_toppings.include? Topping.last)
         end
       end
@@ -201,6 +200,20 @@ class PizzasControllerTest < ActionDispatch::IntegrationTest
           delete pizza_url(pizza)
         end
         assert_redirected_to toppings_url
+      end
+    end
+
+    context "when a pizza has a topping" do
+      before do
+        pizza.toppings << FactoryBot.create(:topping, name: "cheese")
+        pizza.save
+      end
+      it "destroy the pizza_topping record" do
+        sign_in pizza_chef
+        assert_difference ["Pizza.count", "PizzaTopping.count"], -1 do
+          delete pizza_url(pizza)
+        end
+        assert_redirected_to pizzas_url
       end
     end
   end

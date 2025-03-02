@@ -1,10 +1,25 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @pizza %>
+<h1>Pizza Details</h1>
 
-<div>
-  <%= link_to "Edit this pizza", edit_pizza_path(@pizza) %> |
-  <%= link_to "Back to pizzas", pizzas_path %>
-
-  <%= button_to "Destroy this pizza", @pizza, method: :delete %>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= @pizza.name %></h5>
+    <p class="card-text">
+      <strong>Toppings:</strong>
+      <%= @pizza.toppings.map(&:name).join(", ") %>
+    </p>
+    <div class="row">
+      <div class="col-sm-1">
+        <%= link_to 'Edit', edit_pizza_path(@pizza), class: 'btn btn-warning' %>
+      </div>
+      <div class="col-sm-1">
+        <%= link_to 'Back', pizzas_path, class: 'btn btn-secondary' %>
+      </div>
+      <div class="col-sm-1">
+        <%= button_to 'Delete', @pizza, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger ' %>
+      </div>
+    </div>
+    
+  </div>
 </div>

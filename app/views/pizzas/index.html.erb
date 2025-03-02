@@ -1,16 +1,29 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Pizzas" %>
-
 <h1>Pizzas</h1>
 
-<div id="pizzas">
-  <% @pizzas.each do |pizza| %>
-    <%= render pizza %>
-    <p>
-      <%= link_to "Show this pizza", pizza %>
-    </p>
-  <% end %>
-</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Toppings</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
 
-<%= link_to "New pizza", new_pizza_path %>
+  <tbody>
+    <% @pizzas.each do |pizza| %>
+      <tr>
+        <td><%= pizza.name %></td>
+        <td><%= pizza.toppings.map(&:name).join(", ") %></td>
+        <td><%= link_to 'Show', pizza, class: 'btn btn-primary' %></td>
+        <td><%= link_to 'Edit', edit_pizza_path(pizza), class: 'btn btn-warning' %></td>
+        <td><%= button_to 'Destroy', pizza, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+    <%= link_to 'New Pizza', new_pizza_path, class: 'btn btn-success' %>
+
+
+
