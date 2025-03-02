@@ -271,6 +271,7 @@ GEM
       racc
     petergate (3.0.0)
       activerecord (> 4.0.0)
+    pg (1.5.9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -487,6 +488,7 @@ DEPENDENCIES
   minitest (~> 5.20)
   minitest-rails
   petergate
+  pg
   propshaft
   pry
   puma (>= 5.0)
@@ -496,7 +498,6 @@ DEPENDENCIES
   solid_cable
   solid_cache
   solid_queue
-  sqlite3 (>= 2.1)
   stimulus-rails
   thruster
   turbo-rails

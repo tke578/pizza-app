@@ -10,13 +10,17 @@
   </thead>
 
   <tbody>
-    <% @toppings.each do |topping| %>
-      <tr>
-        <td><%= topping.name %></td>
-        <td><%= link_to 'Show', topping, class: 'btn btn-primary' %></td>
-        <td><%= link_to 'Edit', edit_topping_path(topping), class: 'btn btn-warning' %></td>
-        <td><%= button_to 'Destroy', topping, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
-      </tr>
+    <% if @toppings.present? %>
+      <% @toppings.each do |topping| %>
+        <tr>
+          <td><%= topping.name %></td>
+          <td><%= link_to 'Show', topping, class: 'btn btn-primary' %></td>
+          <td><%= link_to 'Edit', edit_topping_path(topping), class: 'btn btn-warning' %></td>
+          <td><%= button_to 'Destroy', topping, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <h3>No Toppings found, please create one!</h3>
     <% end %>
   </tbody>
 </table>
