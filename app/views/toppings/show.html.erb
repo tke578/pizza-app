@@ -1,10 +1,20 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @topping %>
+<h1>Topping Details</h1>
 
-<div>
-  <%= link_to "Edit this topping", edit_topping_path(@topping) %> |
-  <%= link_to "Back to toppings", toppings_path %>
-
-  <%= button_to "Destroy this topping", @topping, method: :delete %>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= @topping.name %></h5>
+    <div class="row">
+      <div class="col-sm-1">
+        <%= link_to 'Edit', edit_topping_path(@topping), class: 'btn btn-warning' %>
+      </div>
+      <div class="col-sm-1">
+        <%= link_to 'Back', toppings_path, class: 'btn btn-secondary' %>
+      </div>
+      <div class="col-sm-1">
+        <%= button_to 'Delete', @topping, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger ' %>
+      </div>
+    </div>
+  </div>
 </div>
