@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.1"
@@ -70,3 +71,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "dockerfile-rails", ">= 1.7", :group => :development
+
+gem "litestream", "~> 0.12.0"
+
+gem "aws-sdk-s3", "~> 1.182", :require => false
