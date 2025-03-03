@@ -38,6 +38,44 @@ To run tests
 
 Runs all the unit tests from `/test`
 
+Strategy of Attack
+
+After gathering all the necessary acceptence criteria and clearing up ambuiguity, I had a clear picture to start on
+The database schema would be as follows
+Users - email, password, roles
+Toppings - name
+Pizzas - name
+PizzaTopping - join table of topping and pizza
+
+Users
+   1. I've identified 2 user roles `pizzza_store_owner` and `pizza_chefs` and used Petergate https://github.com/elorest/petergate to manage the user roles.
+   2. Since the story did not mentioned a user creation interfaced, I assumed there would be users already created hence the seed data.
+   3. Devise for user authentication
+Toppings
+   1. Topping name was the only attribute we need to know
+   2. Pizza Store Owners can only peform the CRUD actions so I had to make sure users with `Pizza Store Owner` are only allowed via the `access [User::PIZZA_STORE OWNER] => :all from petergate
+   3. Added tests to validate
+   4. I like using constants for user roles because it allows subtle changes to be only modified in one place(user model)
+   5. Since Toppings can appear in many pizzas, added association `has_many :pizzas` and join table relation  has_many :pizza_toppings, `:dependent => destroy`. The dependent destory would allow `pizza_topping` to be deleted if a topping was removed.
+
+Pizzas
+   1. Pizza name was the only attribute we need to know
+   2. Pizza Chefs can only peform the CRUD actions so I had to make sure users with `Pizza Chef` are only allowed via the `access [User::PIZZA_CHEF] => :all` from petergate
+   3. Added tests to validate
+   4. Pizza can have many toppings so I added a dropdown select on the Pizza form for the user to choose. The form selection passes the toppings as id's to the controller to create the join table `pizza_toppings`
+   5. Tests were added for these
+
+PizzaToppings
+  1. This forms the join table between pizza and toppings
+  2. I added a constraint for a uniqueness between pizza_id and topping_id to prevent duplicate entries in the case a malicous user wants extra pepperoni.
+  3. There is a controller test for this
+
+Deployment
+   1. I tried to deploy this to heroku using sqlite but then i remembered heroku does not support sqlite so changing database was a learning experience.
+   2. Tailing the production logs helped me uncover minor production friction but powered thru
+   3. I used bootstrap for front end responsiveness
+   4. This was a fun exercise to build from the ground up 
+
 Additional Features to be considered
 
 * I think it would be cool to add a realtime update of when Pizza Store Ownders added/modified a topping, an alert would go out to the Pizza Chefs. Sort of a like a notification on the nav bar i.e. Facebook notifications
