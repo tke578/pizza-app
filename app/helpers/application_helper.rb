@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   def root_path_for_user
     if current_user.has_role?(User::PIZZA_CHEF)
       link_to "Pizzas", pizzas_url, class: "nav-link" 
