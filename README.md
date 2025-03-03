@@ -48,12 +48,12 @@ Pizzas - name
 PizzaTopping - join table of topping and pizza
 
 Users
-   1. I've identified 2 user roles `pizzza_store_owner` and `pizza_chefs` and used Petergate https://github.com/elorest/petergate to manage the user roles.
-   2. Since the story did not mentioned a user creation interfaced, I assumed there would be users already created hence the seed data.
+   1. I've identified 2 user roles `pizzza_store_owner` and `pizza_chef` and used Petergate https://github.com/elorest/petergate to manage the user roles.
+   2. Since the story did not mentioned a user creation interface, I assumed there would be users already created hence the seed data.
    3. Devise for user authentication
 Toppings
    1. Topping name was the only attribute we need to know
-   2. Pizza Store Owners can only peform the CRUD actions so I had to make sure users with `Pizza Store Owner` are only allowed via the `access [User::PIZZA_STORE OWNER] => :all from petergate
+   2. Pizza Store Owners can only peform the CRUD actions so I had to make sure users with `Pizza Store Owner` are only allowed via the `access [User::PIZZA_STORE OWNER] => :all` from petergate
    3. Added tests to validate
    4. I like using constants for user roles because it allows subtle changes to be only modified in one place(user model)
    5. Since Toppings can appear in many pizzas, added association `has_many :pizzas` and join table relation  has_many :pizza_toppings, `:dependent => destroy`. The dependent destory would allow `pizza_topping` to be deleted if a topping was removed.
