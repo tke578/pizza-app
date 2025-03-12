@@ -56,7 +56,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
   gem "factory_bot_rails"
   gem "faker"
-  gem "minitest", "~> 5.20"
+  gem "minitest", "~> 5.25"
   gem "minitest-rails"
   gem "pry"
   gem "database_cleaner-active_record"
